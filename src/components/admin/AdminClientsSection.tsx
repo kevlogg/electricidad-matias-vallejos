@@ -14,6 +14,10 @@ import {
   AlertCircle,
   X,
   MessageCircle,
+  Eye,
+  ChevronRight,
+  DollarSign,
+  UserPlus,
 } from 'lucide-react';
 import { ClientItem } from '@/app/api/admin/clients/route';
 
@@ -29,6 +33,7 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('todos');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<ClientItem | null>(null);
 
   // New client form state
   const [newClient, setNewClient] = useState({
@@ -110,25 +115,25 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
     switch (status) {
       case 'completado':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
             <CheckCircle2 className="w-3 h-3" /> Completado
           </span>
         );
       case 'en_proceso':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 whitespace-nowrap">
             <Clock className="w-3 h-3" /> En Proceso
           </span>
         );
       case 'presupuestado':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FFE600]/10 text-[#FFE600] border border-[#FFE600]/30">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FFE600]/10 text-[#FFE600] border border-[#FFE600]/30 whitespace-nowrap">
             <FileText className="w-3 h-3" /> Presupuestado
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 whitespace-nowrap">
             <AlertCircle className="w-3 h-3" /> Nuevo
           </span>
         );
@@ -142,16 +147,16 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
             <Users className="w-6 h-6 text-[#FFE600]" />
-            Gestión de Clientes
+            Listado de Clientes
           </h2>
           <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1">
-            Registro y seguimiento de clientes, obras, reparaciones y presupuestos en la costa.
+            Gestión en lista compacta. Hacé clic en cualquier cliente para ver sus detalles o presupuestar.
           </p>
         </div>
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFE600] text-[#0B0B0C] font-extrabold text-sm shadow-[0_0_15px_rgba(255,230,0,0.3)] hover:shadow-[0_0_25px_rgba(255,230,0,0.6)] hover:bg-[#FFF04D] transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFE600] text-[#0B0B0C] font-extrabold text-sm shadow-[0_0_15px_rgba(255,230,0,0.3)] hover:shadow-[0_0_25px_rgba(255,230,0,0.6)] hover:bg-[#FFF04D] transition-all shrink-0"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           Nuevo Cliente
@@ -188,71 +193,90 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
         </div>
       </div>
 
-      {/* Clients Cards Grid */}
+      {/* Compact List View */}
       {loading ? (
         <div className="text-center py-16 text-[#A1A1AA] text-sm">
-          Cargando clientes...
+          Cargando listado de clientes...
         </div>
       ) : filteredClients.length === 0 ? (
-        <div className="text-center py-16 p-8 rounded-2xl bg-[#141416] border border-[#26262A]">
-          <p className="text-white font-bold text-base">No se encontraron clientes</p>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Probá ajustando la búsqueda o agregá un nuevo cliente con el botón superior.
+        <div className="text-center py-16 p-8 rounded-2xl bg-[#141416] border border-[#26262A] flex flex-col items-center justify-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#0B0B0C] border border-[#26262A] flex items-center justify-center text-[#FFE600] mb-3">
+            <UserPlus className="w-7 h-7" />
+          </div>
+          <p className="text-white font-bold text-base">No hay clientes registrados aún</p>
+          <p className="text-xs text-[#A1A1AA] mt-1 max-w-md">
+            El sistema se encuentra limpio sin datos de ejemplo. Creá el primer cliente con el botón &ldquo;Nuevo Cliente&rdquo;.
           </p>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="mt-4 px-4 py-2 rounded-xl bg-[#FFE600] text-[#0B0B0C] text-xs font-black"
+          >
+            + Agregar Primer Cliente
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredClients.map((client) => (
-            <div
-              key={client.id}
-              className="p-5 rounded-2xl bg-[#141416] border border-[#26262A] hover:border-[#FFE600]/50 transition-all flex flex-col justify-between gap-4"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div>
-                    <h3 className="font-bold text-white text-base leading-tight">
+        <div className="rounded-2xl bg-[#141416] border border-[#26262A] overflow-hidden">
+          {/* Table Header (Desktop) */}
+          <div className="hidden lg:grid grid-cols-12 gap-3 px-5 py-3 bg-[#101012] border-b border-[#26262A] text-[11px] font-bold uppercase tracking-wider text-[#71717A]">
+            <div className="col-span-3">Cliente</div>
+            <div className="col-span-3">Localidad / Dirección</div>
+            <div className="col-span-2">Servicio</div>
+            <div className="col-span-2">Estado</div>
+            <div className="col-span-2 text-right">Acciones</div>
+          </div>
+
+          {/* Rows */}
+          <div className="divide-y divide-[#26262A]">
+            {filteredClients.map((client) => (
+              <div
+                key={client.id}
+                onClick={() => setSelectedClient(client)}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-4 sm:px-5 hover:bg-[#18181c] cursor-pointer transition-colors items-center group"
+              >
+                {/* Col 1: Nombre & Tel */}
+                <div className="lg:col-span-3 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#0B0B0C] border border-[#26262A] group-hover:border-[#FFE600] flex items-center justify-center text-xs font-bold text-[#FFE600] shrink-0 transition-colors">
+                    {client.name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-bold text-white group-hover:text-[#FFE600] transition-colors truncate">
                       {client.name}
-                    </h3>
-                    <p className="text-xs text-[#FFE600] font-medium mt-0.5">
-                      {client.serviceType}
+                    </h4>
+                    <p className="text-xs text-[#71717A] truncate">
+                      {client.phone || 'Sin teléfono'}
                     </p>
                   </div>
+                </div>
+
+                {/* Col 2: Localidad & Dirección */}
+                <div className="lg:col-span-3 text-xs text-[#A1A1AA] flex items-center gap-1.5 truncate">
+                  <MapPin className="w-3.5 h-3.5 text-[#FFE600] shrink-0" />
+                  <span className="truncate">
+                    <strong className="text-white">{client.locality}</strong>
+                    {client.address ? ` • ${client.address}` : ''}
+                  </span>
+                </div>
+
+                {/* Col 3: Servicio */}
+                <div className="lg:col-span-2 text-xs text-white/90 truncate">
+                  {client.serviceType}
+                </div>
+
+                {/* Col 4: Estado & Monto */}
+                <div className="lg:col-span-2 flex items-center gap-2">
                   {getStatusBadge(client.status)}
-                </div>
-
-                <div className="space-y-1.5 text-xs text-[#A1A1AA] mt-3">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-[#FFE600] shrink-0" />
-                    <span>{client.address} • <strong className="text-white">{client.locality}</strong></span>
-                  </div>
-                  {client.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-[#FFE600] shrink-0" />
-                      <span>{client.phone}</span>
-                    </div>
+                  {client.estimatedAmount && client.estimatedAmount > 0 && (
+                    <span className="font-mono text-xs font-bold text-[#FFE600] hidden xl:inline">
+                      ${client.estimatedAmount.toLocaleString('es-AR')}
+                    </span>
                   )}
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-[#FFE600] shrink-0" />
-                    <span>Fecha: {client.date}</span>
-                  </div>
                 </div>
 
-                {client.notes && (
-                  <div className="mt-3 p-2.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] text-xs text-[#A1A1AA] italic">
-                    &ldquo;{client.notes}&rdquo;
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-3 border-t border-[#26262A] flex items-center justify-between gap-2">
-                <span className="font-mono text-xs font-bold text-white">
-                  {client.estimatedAmount && client.estimatedAmount > 0
-                    ? `$ ${client.estimatedAmount.toLocaleString('es-AR')}`
-                    : 'Sin cotizar'}
-                </span>
-
-                <div className="flex items-center gap-2">
+                {/* Col 5: Botones de Acción */}
+                <div
+                  className="lg:col-span-2 flex items-center justify-end gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {client.phone && (
                     <a
                       href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
@@ -260,24 +284,130 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                      className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs transition-colors"
+                      title="Escribir por WhatsApp"
                     >
-                      <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                      <MessageCircle className="w-4 h-4" />
                     </a>
                   )}
 
                   {onSelectClientForQuote && (
                     <button
                       onClick={() => onSelectClientForQuote(client)}
-                      className="px-3 py-1.5 rounded-lg bg-[#FFE600]/10 text-[#FFE600] hover:bg-[#FFE600]/20 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                      className="p-2 rounded-lg bg-[#FFE600]/10 text-[#FFE600] hover:bg-[#FFE600]/20 text-xs transition-colors"
+                      title="Presupuestar formalmente en PDF"
                     >
-                      <FileText className="w-3.5 h-3.5" /> Presupuestar
+                      <FileText className="w-4 h-4" />
                     </button>
                   )}
+
+                  <button
+                    onClick={() => setSelectedClient(client)}
+                    className="p-2 rounded-lg bg-[#0B0B0C] border border-[#26262A] text-[#A1A1AA] hover:text-white text-xs transition-colors flex items-center gap-1"
+                    title="Ver detalle completo"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span className="text-[11px] font-bold hidden sm:inline">Ver</span>
+                  </button>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Drawer / Modal: Ver Detalle Completo del Cliente */}
+      {selectedClient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg rounded-3xl bg-[#141416] border border-[#26262A] p-6 sm:p-7 shadow-[0_0_50px_rgba(0,0,0,0.9)] max-h-[90vh] overflow-y-auto space-y-5">
+            <button
+              onClick={() => setSelectedClient(null)}
+              className="absolute top-5 right-5 text-[#71717A] hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header info */}
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                {getStatusBadge(selectedClient.status)}
+                <span className="text-xs text-[#71717A] flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> {selectedClient.date}
+                </span>
+              </div>
+              <h3 className="font-heading text-xl font-black text-white">
+                {selectedClient.name}
+              </h3>
+              <p className="text-xs text-[#FFE600] font-semibold mt-0.5">
+                {selectedClient.serviceType}
+              </p>
             </div>
-          ))}
+
+            {/* Details Box */}
+            <div className="p-4 rounded-2xl bg-[#0B0B0C] border border-[#26262A] space-y-2.5 text-xs text-[#A1A1AA]">
+              <div className="flex items-center justify-between">
+                <span>Localidad:</span>
+                <strong className="text-white">{selectedClient.locality}</strong>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Dirección / Barrio:</span>
+                <strong className="text-white">{selectedClient.address || 'No especificada'}</strong>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Teléfono:</span>
+                <strong className="text-white">{selectedClient.phone || 'No registrado'}</strong>
+              </div>
+              <div className="flex items-center justify-between pt-1 border-t border-[#26262A]">
+                <span>Monto estimado / acordado:</span>
+                <strong className="text-base font-mono text-[#FFE600]">
+                  {selectedClient.estimatedAmount && selectedClient.estimatedAmount > 0
+                    ? `$ ${selectedClient.estimatedAmount.toLocaleString('es-AR')}`
+                    : 'Sin cotizar'}
+                </strong>
+              </div>
+            </div>
+
+            {/* Notes */}
+            {selectedClient.notes && (
+              <div>
+                <span className="text-[11px] font-bold uppercase text-[#71717A] block mb-1.5">
+                  Notas / Observaciones del Trabajo:
+                </span>
+                <div className="p-3 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-xs text-[#A1A1AA] italic leading-relaxed">
+                  &ldquo;{selectedClient.notes}&rdquo;
+                </div>
+              </div>
+            )}
+
+            {/* Bottom Actions */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-end gap-2.5">
+              {selectedClient.phone && (
+                <a
+                  href={`https://wa.me/${selectedClient.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    `Hola ${selectedClient.name}, te contacto desde MV Electricidad.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs font-bold border border-emerald-500/30 flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4" /> Escribir por WhatsApp
+                </a>
+              )}
+
+              {onSelectClientForQuote && (
+                <button
+                  onClick={() => {
+                    const c = selectedClient;
+                    setSelectedClient(null);
+                    onSelectClientForQuote(c);
+                  }}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#FFE600] text-[#0B0B0C] text-xs font-black shadow-[0_0_15px_rgba(255,230,0,0.3)] hover:bg-[#FFF04D] flex items-center justify-center gap-1.5 transition-all"
+                >
+                  <FileText className="w-4 h-4" /> Generar Presupuesto PDF
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -354,7 +484,7 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
                   type="text"
                   value={newClient.address}
                   onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
-                  placeholder="Ej: Av. Colón 1950, 3ro A"
+                  placeholder="Ej: Güemes 2800"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white text-sm focus:outline-none focus:border-[#FFE600]"
                 />
               </div>
@@ -386,7 +516,7 @@ export const AdminClientsSection: React.FC<AdminClientsSectionProps> = ({
                     type="number"
                     value={newClient.estimatedAmount}
                     onChange={(e) => setNewClient({ ...newClient, estimatedAmount: e.target.value })}
-                    placeholder="Ej: 65000"
+                    placeholder="Ej: 50000"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white text-sm focus:outline-none focus:border-[#FFE600]"
                   />
                 </div>

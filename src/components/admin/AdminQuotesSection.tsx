@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FileText,
   Download,
@@ -13,6 +13,7 @@ import {
   CheckCircle,
   Copy,
   Zap,
+  User,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { ClientItem } from '@/app/api/admin/clients/route';
@@ -37,51 +38,63 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [validityDays, setValidityDays] = useState(15);
 
-  // Client Data
-  const [clientName, setClientName] = useState(initialClient?.name || 'Mariano Benítez');
-  const [clientPhone, setClientPhone] = useState(initialClient?.phone || '+5492235123456');
-  const [clientAddress, setClientAddress] = useState(initialClient?.address || 'Güemes 2840, Piso 4 B');
+  // Client Data (Clean, no pre-filled fake data)
+  const [clientName, setClientName] = useState(initialClient?.name || '');
+  const [clientPhone, setClientPhone] = useState(initialClient?.phone || '');
+  const [clientAddress, setClientAddress] = useState(initialClient?.address || '');
   const [clientLocality, setClientLocality] = useState(initialClient?.locality || 'Mar del Plata');
 
-  // Items
-  const [items, setItems] = useState<QuoteItem[]>([
-    {
-      id: '1',
-      description: 'Mano de obra: Desmonte y armado de tablero seccional nuevo con peinado prolijo',
-      type: 'Mano de Obra',
-      quantity: 1,
-      unitPrice: 45000,
-    },
-    {
-      id: '2',
-      description: 'Disyuntor diferencial bipolar 25A 30mA norma IRAM (Schneider / Siemens)',
-      type: 'Material IRAM',
-      quantity: 1,
-      unitPrice: 32000,
-    },
-    {
-      id: '3',
-      description: 'Termomagnéticas bipolares curva C 16A y 20A normalizadas',
-      type: 'Material IRAM',
-      quantity: 3,
-      unitPrice: 8500,
-    },
-    {
-      id: '4',
-      description: 'Protector automático de sobre y baja tensión digital programable',
-      type: 'Material IRAM',
-      quantity: 1,
-      unitPrice: 28000,
-    },
-  ]);
-
+  // Items (Clean, initially empty)
+  const [items, setItems] = useState<QuoteItem[]>([]);
   const [discountPct, setDiscountPct] = useState<number>(0);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
 
+  useEffect(() => {
+    if (initialClient) {
+      setClientName(initialClient.name || '');
+      setClientPhone(initialClient.phone || '');
+      setClientAddress(initialClient.address || '');
+      setClientLocality(initialClient.locality || 'Mar del Plata');
+    }
+  }, [initialClient]);
+
   // Quick preset templates
   const applyPreset = (presetName: string) => {
     switch (presetName) {
+      case 'tablero':
+        setItems([
+          {
+            id: '1',
+            description: 'Mano de obra: Desmonte y armado de tablero seccional nuevo con peinado prolijo',
+            type: 'Mano de Obra',
+            quantity: 1,
+            unitPrice: 45000,
+          },
+          {
+            id: '2',
+            description: 'Disyuntor diferencial bipolar 25A 30mA norma IRAM (Schneider / Siemens)',
+            type: 'Material IRAM',
+            quantity: 1,
+            unitPrice: 32000,
+          },
+          {
+            id: '3',
+            description: 'Termomagnéticas bipolares curva C 16A y 20A normalizadas',
+            type: 'Material IRAM',
+            quantity: 3,
+            unitPrice: 8500,
+          },
+          {
+            id: '4',
+            description: 'Protector automático de sobre y baja tensión digital programable',
+            type: 'Material IRAM',
+            quantity: 1,
+            unitPrice: 28000,
+          },
+        ]);
+        break;
+
       case 'urgencia':
         setItems([
           {
@@ -188,6 +201,15 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
 
   // Generate PDF with jsPDF
   const generatePDF = () => {
+    if (!clientName.trim()) {
+      alert('Por favor ingresá el nombre del cliente.');
+      return;
+    }
+    if (items.length === 0) {
+      alert('Agregá al menos un ítem al presupuesto antes de generar el PDF.');
+      return;
+    }
+
     try {
       setIsGeneratingPdf(true);
       const doc = new jsPDF({
@@ -252,9 +274,9 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8.5);
       doc.text(`Cliente: ${clientName}`, 18, y + 12);
-      doc.text(`Teléfono: ${clientPhone}`, 18, y + 18);
+      doc.text(`Teléfono: ${clientPhone || 'No especificado'}`, 18, y + 18);
 
-      doc.text(`Dirección: ${clientAddress}`, 110, y + 12);
+      doc.text(`Dirección: ${clientAddress || 'No especificada'}`, 110, y + 12);
       doc.text(`Localidad: ${clientLocality}`, 110, y + 18);
 
       y += 32;
@@ -286,7 +308,6 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
         doc.setFontSize(8);
         doc.setTextColor(30, 30, 35);
 
-        // Truncate description if too long
         const descText = item.description || 'Ítem sin descripción';
         const truncatedDesc = descText.length > 58 ? descText.substring(0, 56) + '...' : descText;
         doc.text(truncatedDesc, 18, y + 5.5);
@@ -390,7 +411,7 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
       doc.text('Firma y Aclaración', pageWidth - 55, y + 19, { align: 'center' });
 
       // Save document
-      const fileNameSafe = clientName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileNameSafe = clientName.replace(/[^a-zA-Z0-9]/g, '_') || 'Cliente';
       doc.save(`Presupuesto_${quoteNumber}_${fileNameSafe}.pdf`);
 
       setPdfSuccess(true);
@@ -417,11 +438,11 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
 *MV Electricidad • Matías Vallejos*
 _N°: ${quoteNumber} | Fecha: ${date}_
 
-*Cliente:* ${clientName}
-*Dirección:* ${clientAddress} (${clientLocality})
+*Cliente:* ${clientName || 'Cliente'}
+*Dirección:* ${clientAddress || 'A coordinar'} (${clientLocality})
 
 *Detalle de Trabajos y Materiales:*
-${itemsList}
+${itemsList || 'A definir'}
 
 *Subtotal:* $ ${subtotal.toLocaleString('es-AR')}
 ${discountPct > 0 ? `*Bonificación (${discountPct}%):* -$ ${discountAmount.toLocaleString('es-AR')}\n` : ''}*TOTAL A ABONAR:* $ ${total.toLocaleString('es-AR')}
@@ -435,6 +456,10 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
   };
 
   const handleShareWhatsApp = () => {
+    if (items.length === 0) {
+      alert('Agregá al menos un ítem al presupuesto para compartirlo.');
+      return;
+    }
     const cleanPhone = clientPhone.replace(/[^0-9]/g, '');
     const url = cleanPhone
       ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(getWhatsAppShareText())}`
@@ -460,7 +485,8 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <button
             onClick={handleShareWhatsApp}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs sm:text-sm font-bold border border-emerald-500/30 transition-all"
+            disabled={items.length === 0}
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-xs sm:text-sm font-bold border border-emerald-500/30 transition-all disabled:opacity-40"
           >
             <Share2 className="w-4 h-4" />
             WhatsApp
@@ -468,8 +494,8 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
 
           <button
             onClick={generatePDF}
-            disabled={isGeneratingPdf}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFE600] text-[#0B0B0C] font-extrabold text-xs sm:text-sm shadow-[0_0_20px_rgba(255,230,0,0.35)] hover:shadow-[0_0_30px_rgba(255,230,0,0.6)] hover:bg-[#FFF04D] transition-all disabled:opacity-50"
+            disabled={isGeneratingPdf || items.length === 0 || !clientName.trim()}
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFE600] text-[#0B0B0C] font-extrabold text-xs sm:text-sm shadow-[0_0_20px_rgba(255,230,0,0.35)] hover:shadow-[0_0_30px_rgba(255,230,0,0.6)] hover:bg-[#FFF04D] transition-all disabled:opacity-40"
           >
             <Download className="w-4 h-4 stroke-[2.5]" />
             {isGeneratingPdf ? 'Generando...' : 'Descargar PDF Formal'}
@@ -487,26 +513,32 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
       {/* Quick Presets Bar */}
       <div className="p-4 rounded-2xl bg-[#141416] border border-[#26262A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <span className="text-xs font-bold uppercase text-[#A1A1AA] flex items-center gap-1.5">
-          <Zap className="w-3.5 h-3.5 text-[#FFE600]" /> Cargar Plantilla Rápida:
+          <Zap className="w-3.5 h-3.5 text-[#FFE600]" /> Cargar Plantilla Rápida de Trabajo:
         </span>
         <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => applyPreset('tablero')}
+            className="px-3 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] hover:border-[#FFE600] text-xs font-semibold text-white transition-colors"
+          >
+            + Tablero Nuevo Completo
+          </button>
           <button
             onClick={() => applyPreset('urgencia')}
             className="px-3 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] hover:border-[#FFE600] text-xs font-semibold text-white transition-colors"
           >
-            Urgencia / Corto
+            + Urgencia / Corto
           </button>
           <button
             onClick={() => applyPreset('aire')}
             className="px-3 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] hover:border-[#FFE600] text-xs font-semibold text-white transition-colors"
           >
-            Línea Aire Acondicionado
+            + Línea Aire Acondicionado
           </button>
           <button
             onClick={() => applyPreset('pat')}
             className="px-3 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] hover:border-[#FFE600] text-xs font-semibold text-white transition-colors"
           >
-            Puesta a Tierra (Jabalina)
+            + Puesta a Tierra (Jabalina)
           </button>
         </div>
       </div>
@@ -569,12 +601,13 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
             <div>
               <label className="block text-[11px] font-bold uppercase text-[#A1A1AA] mb-1">
-                Nombre del Cliente
+                Nombre del Cliente *
               </label>
               <input
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
+                placeholder="Nombre del cliente..."
                 className="w-full px-3 py-2 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
               />
             </div>
@@ -586,6 +619,7 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
                 type="text"
                 value={clientPhone}
                 onChange={(e) => setClientPhone(e.target.value)}
+                placeholder="+54 9 223..."
                 className="w-full px-3 py-2 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
               />
             </div>
@@ -597,6 +631,7 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
                 type="text"
                 value={clientAddress}
                 onChange={(e) => setClientAddress(e.target.value)}
+                placeholder="Calle y altura o barrio..."
                 className="w-full px-3 py-2 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
               />
             </div>
@@ -618,105 +653,124 @@ _Cualquier duda quedo a tu entera disposición para coordinar día y horario._`;
             </button>
           </div>
 
-          <div className="space-y-3">
-            {items.map((item, idx) => {
-              const rowTotal = (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0);
-              return (
-                <div
-                  key={item.id}
-                  className="p-3.5 rounded-xl bg-[#0B0B0C] border border-[#26262A] flex flex-col md:flex-row items-start md:items-center gap-3"
-                >
-                  <span className="font-mono text-xs font-bold text-[#71717A] w-6 shrink-0">
-                    #{idx + 1}
-                  </span>
-
-                  <div className="flex-1 w-full">
-                    <input
-                      type="text"
-                      value={item.description}
-                      onChange={(e) => updateItem(item.id, 'description', e.target.value)}
-                      placeholder="Descripción detallada de la tarea o material..."
-                      className="w-full px-3 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
-                    />
-                  </div>
-
-                  <div className="w-full md:w-36 shrink-0">
-                    <select
-                      value={item.type}
-                      onChange={(e) => updateItem(item.id, 'type', e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
-                    >
-                      <option value="Mano de Obra">Mano de Obra</option>
-                      <option value="Material IRAM">Material IRAM</option>
-                    </select>
-                  </div>
-
-                  <div className="w-20 shrink-0">
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => updateItem(item.id, 'quantity', Number(e.target.value))}
-                      className="w-full px-2 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs text-center font-mono focus:border-[#FFE600]"
-                    />
-                  </div>
-
-                  <div className="w-32 shrink-0">
-                    <input
-                      type="number"
-                      value={item.unitPrice}
-                      onChange={(e) => updateItem(item.id, 'unitPrice', Number(e.target.value))}
-                      placeholder="$ Unitario"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs font-mono text-right focus:border-[#FFE600]"
-                    />
-                  </div>
-
-                  <div className="w-28 text-right font-mono text-xs font-bold text-[#FFE600] shrink-0">
-                    $ {rowTotal.toLocaleString('es-AR')}
-                  </div>
-
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="p-1.5 text-[#71717A] hover:text-red-400 transition-colors shrink-0"
-                    title="Eliminar fila"
+          {items.length === 0 ? (
+            <div className="text-center py-10 p-6 rounded-xl bg-[#0B0B0C] border border-dashed border-[#26262A]">
+              <p className="text-xs text-[#A1A1AA]">
+                No hay ítems cargados aún en este presupuesto.
+              </p>
+              <p className="text-[11px] text-[#71717A] mt-1">
+                Hacé clic en <strong>+ Agregar Fila</strong> para ingresar mano de obra o materiales, o usá una de las plantillas rápidas de arriba.
+              </p>
+              <button
+                onClick={addItem}
+                className="mt-3 px-3.5 py-1.5 rounded-lg bg-[#FFE600] text-[#0B0B0C] text-xs font-black inline-flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Agregar Primer Ítem
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {items.map((item, idx) => {
+                const rowTotal = (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0);
+                return (
+                  <div
+                    key={item.id}
+                    className="p-3.5 rounded-xl bg-[#0B0B0C] border border-[#26262A] flex flex-col md:flex-row items-start md:items-center gap-3"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                    <span className="font-mono text-xs font-bold text-[#71717A] w-6 shrink-0">
+                      #{idx + 1}
+                    </span>
+
+                    <div className="flex-1 w-full">
+                      <input
+                        type="text"
+                        value={item.description}
+                        onChange={(e) => updateItem(item.id, 'description', e.target.value)}
+                        placeholder="Descripción detallada de la tarea o material..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
+                      />
+                    </div>
+
+                    <div className="w-full md:w-36 shrink-0">
+                      <select
+                        value={item.type}
+                        onChange={(e) => updateItem(item.id, 'type', e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs focus:border-[#FFE600]"
+                      >
+                        <option value="Mano de Obra">Mano de Obra</option>
+                        <option value="Material IRAM">Material IRAM</option>
+                      </select>
+                    </div>
+
+                    <div className="w-20 shrink-0">
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => updateItem(item.id, 'quantity', Number(e.target.value))}
+                        className="w-full px-2 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs text-center font-mono focus:border-[#FFE600]"
+                      />
+                    </div>
+
+                    <div className="w-32 shrink-0">
+                      <input
+                        type="number"
+                        value={item.unitPrice}
+                        onChange={(e) => updateItem(item.id, 'unitPrice', Number(e.target.value))}
+                        placeholder="$ Unitario"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141416] border border-[#26262A] text-white text-xs font-mono text-right focus:border-[#FFE600]"
+                      />
+                    </div>
+
+                    <div className="w-28 text-right font-mono text-xs font-bold text-[#FFE600] shrink-0">
+                      $ {rowTotal.toLocaleString('es-AR')}
+                    </div>
+
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="p-1.5 text-[#71717A] hover:text-red-400 transition-colors shrink-0"
+                      title="Eliminar fila"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Totals & Discounts */}
-          <div className="pt-4 border-t border-[#26262A] flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-xs text-[#A1A1AA] font-bold uppercase">
-                Bonificación / Descuento (%):
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="100"
-                value={discountPct}
-                onChange={(e) => setDiscountPct(Number(e.target.value))}
-                className="w-16 px-2.5 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] text-white text-xs text-center font-mono focus:border-[#FFE600]"
-              />
-            </div>
+          {items.length > 0 && (
+            <div className="pt-4 border-t border-[#26262A] flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-[#A1A1AA] font-bold uppercase">
+                  Bonificación / Descuento (%):
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={discountPct}
+                  onChange={(e) => setDiscountPct(Number(e.target.value))}
+                  className="w-16 px-2.5 py-1.5 rounded-lg bg-[#0B0B0C] border border-[#26262A] text-white text-xs text-center font-mono focus:border-[#FFE600]"
+                />
+              </div>
 
-            <div className="text-right space-y-1">
-              <div className="text-xs text-[#A1A1AA]">
-                Subtotal: <span className="font-mono text-white">$ {subtotal.toLocaleString('es-AR')}</span>
-              </div>
-              {discountPct > 0 && (
-                <div className="text-xs text-red-400">
-                  Descuento ({discountPct}%): -${discountAmount.toLocaleString('es-AR')}
+              <div className="text-right space-y-1">
+                <div className="text-xs text-[#A1A1AA]">
+                  Subtotal: <span className="font-mono text-white">$ {subtotal.toLocaleString('es-AR')}</span>
                 </div>
-              )}
-              <div className="text-lg sm:text-xl font-heading font-black text-[#FFE600]">
-                TOTAL: $ {total.toLocaleString('es-AR')}
+                {discountPct > 0 && (
+                  <div className="text-xs text-red-400">
+                    Descuento ({discountPct}%): -${discountAmount.toLocaleString('es-AR')}
+                  </div>
+                )}
+                <div className="text-lg sm:text-xl font-heading font-black text-[#FFE600]">
+                  TOTAL: $ {total.toLocaleString('es-AR')}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

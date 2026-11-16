@@ -20,24 +20,14 @@ const FALLBACK_DATA = {
   clienteId: 'mv-electricista',
   clienteNombre: 'MV Electricidad (Matías Vallejos)',
   estadoPago: 'AL_DIA',
-  planMonto: 35000,
-  proximoVencimiento: '10 de cada mes',
-  payments: [
-    {
-      id: 'pay_mv_init',
-      date: '2026-11-10',
-      amount: 35000,
-      concept: 'Desarrollo Landing Page & Hosting Cloud',
-      medioPago: 'Transferencia Bancaria',
-      metodo: 'banco',
-      referencia: 'TRF-KEVDEV-01',
-      confirmed: true,
-    },
-  ],
+  planMonto: 30000,
+  fechaInicio: '17/11/2026',
+  proximoVencimiento: '17/12/2026',
+  payments: [] as KevDevPayment[],
 };
 
 export async function GET(request: Request) {
-  // Check admin session or secret
+  // Allow KevDev secret or authenticated admin
   const secretHeader = request.headers.get('x-kevdev-secret') || '';
   const expectedSecret = process.env.KEVDEV_PAYMENTS_SECRET || 'kevdev_payments_sec_2026_key';
 
@@ -67,15 +57,18 @@ export async function GET(request: Request) {
 
     if (res.ok) {
       const data = await res.json();
+      const realPayments: KevDevPayment[] = Array.isArray(data.payments) ? data.payments : [];
+
       return NextResponse.json(
         {
           success: true,
           clienteId,
           clienteNombre: 'MV Electricidad (Matías Vallejos)',
           estadoPago: data.estadoPago || 'AL_DIA',
-          planMonto: 35000,
-          proximoVencimiento: '10 de cada mes',
-          payments: Array.isArray(data.payments) && data.payments.length > 0 ? data.payments : FALLBACK_DATA.payments,
+          planMonto: 30000,
+          fechaInicio: '17/11/2026',
+          proximoVencimiento: '17/12/2026',
+          payments: realPayments,
         },
         {
           headers: {
@@ -85,9 +78,9 @@ export async function GET(request: Request) {
       );
     }
 
-    console.warn('[Billing Payments] KevDev API respondió status:', res.status);
+    console.warn('[Billing Payments] KevDev API status:', res.status);
   } catch (err: any) {
-    console.warn('[Billing Payments] Error conectando con KevDev API:', err?.message || err);
+    console.warn('[Billing Payments] Error connecting to KevDev API:', err?.message || err);
   }
 
   return NextResponse.json(FALLBACK_DATA, {

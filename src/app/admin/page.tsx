@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Users,
   FileText,
@@ -19,9 +19,12 @@ import { ClientItem } from '@/app/api/admin/clients/route';
 
 type AdminTab = 'clientes' | 'presupuestos' | 'plan';
 
-export default function AdminPage() {
+function AdminContent() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<AdminTab>('clientes');
+  const searchParams = useSearchParams();
+  const subSuccessParam = searchParams.get('sub_success') === 'true';
+
+  const [activeTab, setActiveTab] = useState<AdminTab>(subSuccessParam ? 'plan' : 'clientes');
   const [selectedClientForQuote, setSelectedClientForQuote] = useState<ClientItem | null>(null);
 
   const handleSelectClient = (client: ClientItem) => {
@@ -163,7 +166,9 @@ export default function AdminPage() {
           <AdminQuotesSection initialClient={selectedClientForQuote} />
         )}
 
-        {activeTab === 'plan' && <AdminPlanKevDevSection />}
+        {activeTab === 'plan' && (
+          <AdminPlanKevDevSection initialSubSuccess={subSuccessParam} />
+        )}
       </main>
 
       {/* Footer */}
@@ -179,5 +184,13 @@ export default function AdminPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center text-xs text-[#A1A1AA]">Cargando panel...</div>}>
+      <AdminContent />
+    </Suspense>
   );
 }
