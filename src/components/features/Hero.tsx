@@ -1,39 +1,60 @@
 // src/components/features/Hero.tsx
 'use client';
 
-import React from 'react';
-import { ShieldCheck, CheckCircle2, Clock, MessageSquare, ArrowRight } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import { ShieldCheck, CheckCircle2, Clock, MessageSquare, ArrowRight, Zap, Award } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { AnimatedMvLogo } from './AnimatedMvLogo';
 import { getWhatsAppUrl } from '@/lib/constants';
 
 export const Hero: React.FC = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay handled with muted attribute
+      });
+    }
+  }, []);
+
+  const handleVideoEnded = () => {
+    if (videoRef.current) {
+      // Plays once, then resets to the starting frame and stays fixed
+      videoRef.current.currentTime = 0;
+      videoRef.current.pause();
+    }
+  };
+
   return (
     <section
       id="hero"
       className="relative min-h-[92vh] pt-28 pb-16 lg:pt-36 lg:pb-24 flex items-center overflow-hidden bg-[#0B0B0C]"
     >
-      {/* Background blueprint grid */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-blueprint opacity-60 pointer-events-none"
-      />
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <video
+          ref={videoRef}
+          src="/videos/hero-electric.mp4"
+          poster="/videos/hero-poster.jpg"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onEnded={handleVideoEnded}
+          className="w-full h-full object-cover object-center lg:object-right opacity-85"
+        />
 
-      {/* Radial yellow energy gradients */}
-      <div
-        aria-hidden="true"
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-[#FFE600]/10 via-[#FFE600]/3 to-transparent blur-3xl pointer-events-none"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute bottom-10 right-10 w-96 h-96 bg-[#FFE600]/5 rounded-full blur-3xl pointer-events-none"
-      />
+        {/* Gradient overlays to ensure text readability on the left while letting the right glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0C] via-[#0B0B0C]/80 via-40% to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0C] via-transparent to-[#0B0B0C]/50" />
+        <div className="absolute inset-0 bg-blueprint opacity-20 pointer-events-none" />
+      </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Copy & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Top Badge */}
             <div className="mb-5 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <Badge variant="yellow" size="md">
@@ -117,38 +138,29 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Hero Visual with Animated MV Logo */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end items-center relative z-10">
-            {/* Technical HUD Frame */}
-            <div className="relative p-6 sm:p-8 rounded-3xl bg-[#141416]/80 border border-[#26262A] backdrop-blur-md shadow-2xl">
-              {/* Corner coordinate marks */}
-              <span className="absolute top-2 left-3 text-[10px] font-mono text-[#FFE600]/50 tracking-wider">
-                [VOLT-220V/50HZ]
-              </span>
-              <span className="absolute top-2 right-3 text-[10px] font-mono text-[#A1A1AA]/50 tracking-wider">
-                SEC_01 // SECURE
-              </span>
-              <span className="absolute bottom-2 left-3 text-[10px] font-mono text-[#A1A1AA]/50 tracking-wider">
-                SYS_STATUS: ACTIVE
-              </span>
-              <span className="absolute bottom-2 right-3 text-[10px] font-mono text-[#FFE600]/50 tracking-wider">
-                AEA-90364
-              </span>
+          {/* Right Column: Floating Technical HUD Status Over Background Video */}
+          <div className="lg:col-span-5 flex flex-col justify-end items-center lg:items-end relative z-10 pt-8 lg:pt-0">
+            {/* Floating Technical Status Card */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#141416]/75 border border-[#FFE600]/40 backdrop-blur-md shadow-[0_0_30px_rgba(255,230,0,0.15)] flex flex-col gap-3 max-w-xs w-full">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#FFE600]">
+                <span className="flex items-center gap-1 font-bold">
+                  <Zap className="w-3.5 h-3.5 fill-[#FFE600]" />
+                  TENSIÓN NORMALIZADA
+                </span>
+                <span>220V / 50Hz</span>
+              </div>
 
-              {/* Animated Logo Component */}
-              <AnimatedMvLogo size="hero" showSparks priority />
+              <div className="flex items-center justify-between text-xs text-[#A1A1AA] pt-2 border-t border-white/10">
+                <span>Norma aplicada:</span>
+                <span className="text-white font-mono font-semibold">AEA 90364</span>
+              </div>
 
-              {/* Status pill under logo */}
-              <div className="mt-6 flex items-center justify-between px-3.5 py-2 rounded-xl bg-[#0B0B0C] border border-[#26262A]">
+              <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#0B0B0C]/80 border border-[#26262A]">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#FFE600] animate-ping" />
-                  <span className="text-xs font-semibold text-white tracking-wide">
-                    Guardia de Atención Rápida
-                  </span>
+                  <span className="text-xs font-semibold text-white">Guardia Activa</span>
                 </div>
-                <span className="text-xs font-mono text-[#FFE600] font-bold">
-                  24/7 ACTIVO
-                </span>
+                <span className="text-xs font-mono font-bold text-[#FFE600]">24/7</span>
               </div>
             </div>
           </div>
