@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://mvelectricidad.com.ar/sitemap.xml',
+    sitemap: 'https://electricidad-matias-vallejos.vercel.app/sitemap.xml',
   };
 }
