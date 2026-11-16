@@ -1,6 +1,7 @@
 // src/app/page.tsx
 import { Header } from '@/components/features/Header';
 import { Hero } from '@/components/features/Hero';
+import { HeroServicesStrip } from '@/components/features/HeroServicesStrip';
 import { ElectricDivider } from '@/components/features/ElectricDivider';
 import { ServicesSection } from '@/components/features/ServicesSection';
 import { WhyChooseUsSection } from '@/components/features/WhyChooseUsSection';
@@ -19,6 +20,9 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <Hero />
+
+      {/* Tira de Servicios destacados y diferenciales */}
+      <HeroServicesStrip />
 
       {/* Dynamic Electric Divider */}
       <ElectricDivider />
