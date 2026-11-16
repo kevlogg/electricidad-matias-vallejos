@@ -12,7 +12,6 @@ export const SocialProofSection: React.FC = () => {
     <section id="resenas" className="py-20 lg:py-28 bg-[#0B0B0C] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badgeText="Reputación y Experiencias Reales"
           title="Lo que opinan quienes confiaron en MV Electricidad"
           highlightedWord="MV Electricidad"
           subtitle="Compromiso innegociable con la calidad y la seguridad. Calificación perfecta en Google basada en la satisfacción de nuestros clientes."

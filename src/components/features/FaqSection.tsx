@@ -18,7 +18,6 @@ export const FaqSection: React.FC = () => {
     <section id="faq" className="py-20 lg:py-28 bg-[#0B0B0C] relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badgeText="Preguntas Frecuentes"
           title="Respuestas Claras a Dudas Habituales"
           highlightedWord="Dudas Habituales"
           subtitle="Todo lo que necesitás saber antes de solicitar tu servicio eléctrico."

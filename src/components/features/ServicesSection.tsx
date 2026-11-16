@@ -9,7 +9,7 @@ import {
   Lightbulb,
   ShieldCheck,
   Wrench,
-  Check,
+  ArrowRight,
   MessageCircle,
 } from 'lucide-react';
 import { SERVICES_LIST, getWhatsAppUrl } from '@/lib/constants';
@@ -20,7 +20,7 @@ export const ServicesSection: React.FC = () => {
   const getIcon = (iconName: string) => {
     const iconProps = {
       className:
-        'w-6 h-6 text-[#FFE600] group-hover:drop-shadow-[0_0_10px_#FFE600] transition-all duration-300',
+        'w-5 h-5 text-[#FFE600] group-hover:scale-110 transition-transform duration-300',
     };
     switch (iconName) {
       case 'AlertTriangle':
@@ -41,7 +41,7 @@ export const ServicesSection: React.FC = () => {
   };
 
   return (
-    <section id="servicios" className="py-20 lg:py-28 bg-[#0B0B0C] relative">
+    <section id="servicios" className="py-16 lg:py-24 bg-[#0B0B0C] relative">
       {/* Background blueprint subtle */}
       <div
         aria-hidden="true"
@@ -50,74 +50,54 @@ export const ServicesSection: React.FC = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badgeText="Especialidades y Cobertura Técnica"
           title="Servicios Eléctricos Profesionales"
           highlightedWord="Profesionales"
-          subtitle="Trabajos certificados, presupuestos sin vueltas y cumplimiento riguroso de normas de seguridad AEA en cada intervención."
+          subtitle="Trabajos certificados, diagnósticos precisos y cumplimiento riguroso de normas de seguridad AEA en cada intervención."
         />
 
-        {/* 6 Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* 6 Services Grid - Compact & Balanced */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           {SERVICES_LIST.map((service) => (
             <div
               key={service.id}
-              className={`group relative rounded-2xl bg-[#141416] p-7 border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 ${
+              className={`group relative rounded-2xl bg-[#141416] p-5 sm:p-6 border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${
                 service.isPopular
-                  ? 'border-[#FFE600]/40 shadow-[0_0_25px_rgba(255,230,0,0.12)]'
-                  : 'border-[#26262A] hover:border-[#FFE600] hover:shadow-[0_0_30px_rgba(255,230,0,0.18)]'
+                  ? 'border-[#FFE600]/50 shadow-[0_0_20px_rgba(255,230,0,0.12)]'
+                  : 'border-[#26262A] hover:border-[#FFE600] hover:shadow-[0_0_25px_rgba(255,230,0,0.15)]'
               }`}
             >
-              {/* Popular badge */}
-              {service.isPopular && (
-                <div className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-[#FFE600] text-[#0B0B0C] font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(255,230,0,0.5)]">
-                  Atención Prioritaria
-                </div>
-              )}
-
               <div>
                 {/* Header: Icon & Number */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-[#0B0B0C] border border-[#26262A] group-hover:border-[#FFE600] flex items-center justify-center transition-colors">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#0B0B0C] border border-[#26262A] group-hover:border-[#FFE600] flex items-center justify-center transition-colors shadow-inner">
                     {getIcon(service.icon)}
                   </div>
-                  <span className="font-mono text-sm font-bold text-[#A1A1AA]/50 group-hover:text-[#FFE600] transition-colors">
+                  <span className="font-mono text-xs font-bold text-[#A1A1AA]/40 group-hover:text-[#FFE600] transition-colors">
                     {service.number}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="font-heading text-xl font-bold text-white mb-2.5 group-hover:text-[#FFE600] transition-colors">
+                <h3 className="font-heading text-lg font-bold text-white mb-2 group-hover:text-[#FFE600] transition-colors leading-snug">
                   {service.title}
                 </h3>
 
-                {/* Full description */}
-                <p className="text-sm text-[#A1A1AA] leading-relaxed mb-6">
+                {/* Concise Description */}
+                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed mb-5">
                   {service.fullDesc}
                 </p>
-
-                {/* Features checklist */}
-                <ul className="space-y-2 mb-8 pt-4 border-t border-[#26262A]">
-                  {service.features.map((feat, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2.5 text-xs sm:text-sm text-white/90"
-                    >
-                      <Check className="w-4 h-4 text-[#FFE600] shrink-0 mt-0.5" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
 
-              {/* Action Button */}
-              <div className="pt-2">
+              {/* Action Button: Compact & Direct */}
+              <div className="pt-2 border-t border-[#26262A]/60">
                 <Button
                   href={getWhatsAppUrl(service.whatsappMessage)}
                   variant="secondary"
                   size="sm"
                   fullWidth
-                  leftIcon={<MessageCircle className="w-4 h-4" />}
+                  rightIcon={<ArrowRight className="w-3.5 h-3.5 text-[#FFE600]" />}
                   trackingLocation={`service_card_${service.id}`}
+                  className="py-2.5 text-xs font-bold"
                   aria-label={`Consultar por ${service.title} por WhatsApp`}
                 >
                   Consultar por WhatsApp

@@ -59,7 +59,6 @@ ${commentInput.trim() ? `• Detalle adicional: ${commentInput.trim()}` : ''}`;
     <section id="zonas-y-horarios" className="py-20 lg:py-28 bg-[#0B0B0C] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badgeText="Cobertura Local & Coordinación Rápida"
           title="Zonas de Atención y Presupuesto Express"
           highlightedWord="Zonas de Atención"
           subtitle="Atención en toda la Ciudad de Buenos Aires y principales zonas de Gran Buenos Aires con respuesta inmediata."

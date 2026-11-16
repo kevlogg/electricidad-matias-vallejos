@@ -52,7 +52,6 @@ export const WhyChooseUsSection: React.FC = () => {
     <section id="por-que-elegirme" className="py-20 lg:py-28 bg-[#0B0B0C] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          badgeText="Confianza & Calidad Técnica"
           title="¿Por qué elegir a MV Electricidad?"
           highlightedWord="MV Electricidad"
           subtitle="La tranquilidad de un trabajo bien ejecutado desde la primera vez, con la responsabilidad y el compromiso de un profesional dedicado."

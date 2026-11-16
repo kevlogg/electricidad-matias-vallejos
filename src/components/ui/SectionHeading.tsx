@@ -21,7 +21,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 }) => {
   return (
     <div
-      className={`relative mb-12 sm:mb-16 ${
+      className={`relative mb-10 sm:mb-14 ${
         centered ? 'text-center mx-auto max-w-3xl' : 'max-w-2xl'
       } ${className}`}
     >
@@ -53,7 +53,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
       {/* Decorative electrical pulse line */}
       <div
-        className={`mt-6 h-[2px] w-24 bg-[#26262A] relative overflow-hidden rounded-full ${
+        className={`mt-5 h-[2px] w-24 bg-[#26262A] relative overflow-hidden rounded-full ${
           centered ? 'mx-auto' : ''
         }`}
       >
