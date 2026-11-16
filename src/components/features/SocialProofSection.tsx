@@ -6,6 +6,7 @@ import { Star, CheckCircle, ExternalLink, MessageSquare } from 'lucide-react';
 import { TESTIMONIALS_DATA, BUSINESS_CONFIG, getWhatsAppUrl } from '@/lib/constants';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Button } from '@/components/ui/Button';
+import { VoltmeterCounter } from '@/components/ui/VoltmeterCounter';
 
 export const SocialProofSection: React.FC = () => {
   return (
@@ -16,6 +17,37 @@ export const SocialProofSection: React.FC = () => {
           highlightedWord="MV Electricidad"
           subtitle="Compromiso innegociable con la calidad y la seguridad. Calificación perfecta en Google basada en la satisfacción de nuestros clientes."
         />
+
+        {/* 4 Voltmeter Digital Technical Counters */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
+          <VoltmeterCounter
+            value={5.0}
+            decimals={1}
+            label="Calificación Google"
+            unit="5.0 ★"
+          />
+          <VoltmeterCounter
+            value={100}
+            decimals={0}
+            suffix="%"
+            label="Materiales IRAM"
+            unit="NORMA"
+          />
+          <VoltmeterCounter
+            value={24}
+            decimals={0}
+            suffix="/7"
+            label="Guardia y Urgencias"
+            unit="220V"
+          />
+          <VoltmeterCounter
+            value={10}
+            decimals={0}
+            prefix="+"
+            label="Años de Experiencia"
+            unit="EXP"
+          />
+        </div>
 
         {/* Google Score Banner */}
         <div className="max-w-2xl mx-auto mb-14 p-6 rounded-2xl bg-[#141416] border border-[#26262A] shadow-[0_0_30px_rgba(0,0,0,0.6)] flex flex-col sm:flex-row items-center justify-between gap-6">

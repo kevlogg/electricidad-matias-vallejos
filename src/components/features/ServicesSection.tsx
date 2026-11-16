@@ -15,6 +15,8 @@ import {
 import { SERVICES_LIST, getWhatsAppUrl } from '@/lib/constants';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Button } from '@/components/ui/Button';
+import { TiltCard } from '@/components/ui/TiltCard';
+import { BorderBeam } from '@/components/ui/BorderBeam';
 
 export const ServicesSection: React.FC = () => {
   const getIcon = (iconName: string) => {
@@ -55,17 +57,22 @@ export const ServicesSection: React.FC = () => {
           subtitle="Trabajos certificados, diagnósticos precisos y cumplimiento riguroso de normas de seguridad AEA en cada intervención."
         />
 
-        {/* 6 Services Grid - Compact & Balanced */}
+        {/* 6 Services Grid - Compact & Balanced with 3D Tilt, Spotlight and BorderBeam */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           {SERVICES_LIST.map((service) => (
-            <div
+            <TiltCard
               key={service.id}
-              className={`group relative rounded-2xl bg-[#141416] p-5 sm:p-6 border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${
+              maxTilt={6}
+              spotlight={true}
+              spotlightColor="rgba(255, 230, 0, 0.12)"
+              className={`group relative rounded-2xl bg-[#141416] p-5 sm:p-6 border transition-all duration-300 flex flex-col justify-between ${
                 service.isPopular
-                  ? 'border-[#FFE600]/50 shadow-[0_0_20px_rgba(255,230,0,0.12)]'
+                  ? 'border-[#FFE600]/60 shadow-[0_0_25px_rgba(255,230,0,0.16)]'
                   : 'border-[#26262A] hover:border-[#FFE600] hover:shadow-[0_0_25px_rgba(255,230,0,0.15)]'
               }`}
             >
+              {service.isPopular && <BorderBeam duration={7} size={250} />}
+
               <div>
                 {/* Header: Icon & Number */}
                 <div className="flex items-center justify-between mb-4">
@@ -89,7 +96,7 @@ export const ServicesSection: React.FC = () => {
               </div>
 
               {/* Action Button: Compact & Direct */}
-              <div className="pt-2 border-t border-[#26262A]/60">
+              <div className="pt-2 border-t border-[#26262A]/60 relative z-20">
                 <Button
                   href={getWhatsAppUrl(service.whatsappMessage)}
                   variant="secondary"
@@ -103,7 +110,7 @@ export const ServicesSection: React.FC = () => {
                   Consultar por WhatsApp
                 </Button>
               </div>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </div>

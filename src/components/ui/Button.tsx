@@ -1,7 +1,7 @@
 // src/components/ui/Button.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics/events';
 
@@ -15,6 +15,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   trackingLocation?: string;
   trackingTarget?: string;
   fullWidth?: boolean;
+}
+
+interface Spark {
+  id: number;
+  x: number;
+  y: number;
+  angle: number;
+  distance: number;
+  size: number;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -32,6 +41,8 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   ...props
 }) => {
+  const [sparks, setSparks] = useState<Spark[]>([]);
+
   const baseStyles =
     'relative inline-flex items-center justify-center font-bold tracking-tight rounded-xl overflow-hidden transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFE600] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0C] active:scale-[0.98] select-none group';
 
@@ -56,7 +67,26 @@ export const Button: React.FC<ButtonProps> = ({
 
   const widthStyle = fullWidth ? 'w-full' : '';
 
+  const triggerSparks = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const newSparks: Spark[] = Array.from({ length: 6 }).map((_, i) => ({
+      id: Date.now() + i,
+      x: clickX,
+      y: clickY,
+      angle: (i * (360 / 6) + Math.random() * 20) * (Math.PI / 180),
+      distance: Math.random() * 28 + 20,
+      size: Math.random() * 3 + 2.5,
+    }));
+
+    setSparks(newSparks);
+    setTimeout(() => setSparks([]), 550);
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    triggerSparks(e);
     trackEvent({
       event: 'click_cta',
       location: trackingLocation,
@@ -75,6 +105,25 @@ export const Button: React.FC<ButtonProps> = ({
         aria-hidden="true"
         className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full skew-x-[-25deg] group-hover:animate-[shimmerSweep_1s_ease-in-out_forwards] pointer-events-none"
       />
+
+      {/* Electric Spark Micro-Explosion on Click */}
+      {sparks.map((spark) => (
+        <span
+          key={spark.id}
+          className="absolute rounded-full bg-[#FFE600] pointer-events-none z-30 shadow-[0_0_8px_#FFE600] animate-spark-burst"
+          style={
+            {
+              left: `${spark.x}px`,
+              top: `${spark.y}px`,
+              width: `${spark.size}px`,
+              height: `${spark.size}px`,
+              '--target-x': `${Math.cos(spark.angle) * spark.distance}px`,
+              '--target-y': `${Math.sin(spark.angle) * spark.distance}px`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+
       {leftIcon && <span className="shrink-0 transition-transform group-hover:scale-110">{leftIcon}</span>}
       <span className="relative z-10">{children}</span>
       {rightIcon && <span className="shrink-0 transition-transform group-hover:translate-x-0.5">{rightIcon}</span>}

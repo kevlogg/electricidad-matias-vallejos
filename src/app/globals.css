@@ -206,3 +206,55 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .animate-neon-border {
   animation: neonBorderPulse 3s infinite ease-in-out;
 }
+
+/* New High-End Electric Animations */
+@keyframes borderBeamRotate {
+  0% {
+    offset-distance: 0%;
+    transform: rotate(0deg);
+  }
+  100% {
+    offset-distance: 100%;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes electricPulseTravel {
+  0% {
+    left: -20%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    opacity: 0;
+  }
+}
+
+@keyframes sparkBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--target-x), var(--target-y)) scale(0.2);
+  }
+}
+
+.animate-border-beam {
+  animation: borderBeamRotate var(--duration, 6s) linear infinite;
+}
+
+.animate-electric-pulse-travel {
+  animation: electricPulseTravel 4.5s ease-in-out infinite;
+}
+
+.animate-spark-burst {
+  animation: sparkBurst 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

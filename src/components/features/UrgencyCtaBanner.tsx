@@ -4,11 +4,13 @@
 import React from 'react';
 import { AlertCircle, PhoneCall } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { BorderBeam } from '@/components/ui/BorderBeam';
 import { getWhatsAppUrl } from '@/lib/constants';
 
 export const UrgencyCtaBanner: React.FC = () => {
   return (
     <section className="relative py-14 bg-gradient-to-r from-[#141416] via-[#1c1c20] to-[#141416] border-y border-[#FFE600]/30 overflow-hidden">
+      <BorderBeam size={350} duration={8} borderWidth={2} />
       {/* Background ambient pulse */}
       <div
         aria-hidden="true"

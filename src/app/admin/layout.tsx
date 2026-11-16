@@ -1,0 +1,18 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Panel de Control • MV Electricidad',
+  description: 'Panel de administración y gestión para Matías Vallejos (MV Electricidad).',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
