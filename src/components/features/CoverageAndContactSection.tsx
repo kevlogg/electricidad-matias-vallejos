@@ -61,7 +61,7 @@ ${commentInput.trim() ? `• Detalle adicional: ${commentInput.trim()}` : ''}`;
         <SectionHeading
           title="Zonas de Atención y Presupuesto Express"
           highlightedWord="Zonas de Atención"
-          subtitle="Atención en toda la Ciudad de Buenos Aires y principales zonas de Gran Buenos Aires con respuesta inmediata."
+          subtitle="Atención en Mar del Plata, Batán, Miramar, Santa Clara del Mar y Mar de Cobo con respuesta inmediata."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
@@ -222,7 +222,7 @@ ${commentInput.trim() ? `• Detalle adicional: ${commentInput.trim()}` : ''}`;
                     type="text"
                     value={zoneInput}
                     onChange={(e) => setZoneInput(e.target.value)}
-                    placeholder="Ej: Palermo, Belgrano, Vicente López..."
+                    placeholder="Ej: Mar del Plata, Güemes, Batán, Miramar, Santa Clara..."
                     className="w-full px-4 py-3 rounded-xl bg-[#0B0B0C] border border-[#26262A] text-white placeholder-[#71717A] text-sm focus:outline-none focus:border-[#FFE600] focus:ring-1 focus:ring-[#FFE600] transition-colors"
                   />
                 </div>

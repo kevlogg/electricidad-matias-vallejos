@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'MV Electricidad • Matías Vallejos',
     short_name: 'MV Electricidad',
     description:
-      'Soluciones eléctricas profesionales, seguras y garantizadas por Matías Vallejos en CABA y GBA. Urgencias 24hs, tableros e instalaciones.',
+      'Soluciones eléctricas profesionales, seguras y garantizadas por Matías Vallejos en Mar del Plata, Batán, Miramar, Santa Clara y Mar de Cobo. Urgencias 24hs, tableros e instalaciones.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0B0B0C',

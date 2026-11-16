@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3 text-sm text-[#A1A1AA]">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#FFE600] shrink-0 mt-0.5" />
-                <span>CABA y principales localidades de Gran Buenos Aires</span>
+                <span>Mar del Plata, Batán, Miramar, Santa Clara del Mar y Mar de Cobo</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#FFE600] shrink-0 mt-0.5" />

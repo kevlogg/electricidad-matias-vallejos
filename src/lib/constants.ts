@@ -148,7 +148,7 @@ export const TESTIMONIALS_DATA: TestimonialItem[] = [
   {
     id: '1',
     author: 'Mariano Benítez',
-    location: 'Caballito, CABA',
+    location: 'Mar del Plata (Zona Güemes)',
     workDone: 'Urgencia por cortocircuito y recambio de disyuntor',
     date: 'Hace 2 semanas',
     rating: 5,
@@ -159,42 +159,56 @@ export const TESTIMONIALS_DATA: TestimonialItem[] = [
   {
     id: '2',
     author: 'Valeria Sotomayor',
-    location: 'Palermo, CABA',
+    location: 'Santa Clara del Mar',
     workDone: 'Tablero eléctrico nuevo e instalación de aires',
     date: 'Hace 1 mes',
     rating: 5,
     comment:
-      'Excelente trabajo en el tablero principal de nuestro departamento y la instalación de 3 circuitos dedicados para aires acondicionados. Todo emprolijado, con protectores de tensión y rotulado. Te explica todo con claridad y es súper limpio trabajando.',
+      'Excelente trabajo en el tablero principal de nuestra casa y la instalación de 3 circuitos dedicados para aires acondicionados. Todo emprolijado, con protectores de tensión y rotulado. Te explica todo con claridad y es súper limpio trabajando.',
     avatarText: 'VS',
   },
   {
     id: '3',
     author: 'Ignacio G. Roldán',
-    location: 'Belgrano / Núñez',
+    location: 'Miramar / Costanera',
     workDone: 'Recambio integral de luminarias LED y tomas',
     date: 'Hace 3 semanas',
     rating: 5,
     comment:
-      'Contratamos a Matías para cambiar todas las dicroicas por artefactos LED embutidos y agregar tomas en el living y oficina. Quedó perfecto, ni un solo rasguño en la pintura y el consumo bajó notablemente. Muy puntual y de confianza absoluta.',
+      'Contratamos a Matías para cambiar todas las dicroicas por artefactos LED embutidos y agregar tomas en el living y taller. Quedó perfecto, ni un solo rasguño en la pintura y el consumo bajó notablemente. Muy puntual y de confianza absoluta.',
     avatarText: 'IR',
   },
 ];
 
 export const COVERAGE_ZONES: ZoneItem[] = [
   {
-    name: 'Ciudad Autónoma de Buenos Aires (CABA)',
-    badge: 'Atención Prioritaria',
+    name: 'Mar del Plata',
+    badge: 'Cobertura Integral',
     neighborhoods: [
-      'Palermo', 'Belgrano', 'Caballito', 'Recoleta', 'Villa Urquiza',
-      'Núñez', 'Villa Crespo', 'Colegiales', 'Almagro', 'Saavedra',
-      'Flores', 'Parque Chacabuco', 'Devoto', 'San Telmo'
+      'Centro', 'Güemes', 'Playa Grande', 'La Perla', 'Constitución',
+      'Chauvín', 'Plaza Mitre', 'Caisamar', 'Punta Mogotes', 'Playa Serena',
+      'Sierra de los Padres', 'Bosque Peralta Ramos', 'Puerto', 'Los Troncos'
     ],
   },
   {
-    name: 'Gran Buenos Aires (Zonas aledañas)',
-    badge: 'Con coordinación previa',
+    name: 'Batán',
+    badge: 'Atención Directa',
     neighborhoods: [
-      'Vicente López', 'Olivos', 'San Isidro', 'San Martín', 'Tres de Febrero', 'Avellaneda', 'Lanús', 'Ramos Mejía'
+      'Casco Urbano', 'Parque Industrial Gral. Savio', 'Estación Chapadmalal', 'Ruta 88', 'Colina Alegre'
+    ],
+  },
+  {
+    name: 'Miramar',
+    badge: 'Servicio & Urgencias',
+    neighborhoods: [
+      'Centro', 'Costanera', 'Parque Mar', 'Las Palmas', 'Mar del Sud', 'Zona Residencial'
+    ],
+  },
+  {
+    name: 'Santa Clara del Mar & Mar de Cobo',
+    badge: 'Costa Norte',
+    neighborhoods: [
+      'Santa Clara del Mar', 'Mar de Cobo', 'Camet Norte', 'Playa Dorada', 'La Caleta', 'Mar Chiquita'
     ],
   },
 ];
