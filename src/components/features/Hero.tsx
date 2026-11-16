@@ -12,37 +12,31 @@ export const Hero: React.FC = () => {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
-        // Autoplay handled with muted attribute
+        // Autoplay handled by browser policies with muted attribute
       });
     }
   }, []);
-
-  const handleVideoEnded = () => {
-    if (videoRef.current) {
-      // Plays once, then resets to the starting frame and stays fixed
-      videoRef.current.currentTime = 0;
-      videoRef.current.pause();
-    }
-  };
 
   return (
     <section
       id="hero"
       className="relative min-h-[90vh] pt-32 pb-16 lg:pt-40 lg:pb-24 flex items-center overflow-hidden bg-[#0B0B0C]"
     >
-      {/* Background Video: 100% full opacity, clean, with zero opaque layers on top */}
+      {/* Background Video: Web-optimized 1080p, zero overlay opacity, faststart streaming */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <video
           ref={videoRef}
-          src="/videos/hero-electric.mp4"
           poster="/videos/hero-poster.jpg"
           autoPlay
           muted
+          loop
           playsInline
           preload="auto"
-          onEnded={handleVideoEnded}
           className="w-full h-full object-cover object-center lg:object-right"
-        />
+        >
+          <source src="/videos/hero-electric.mp4" type="video/mp4" />
+          <source src="/videos/hero-electric.webm" type="video/webm" />
+        </video>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
