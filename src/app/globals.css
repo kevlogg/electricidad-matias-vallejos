@@ -1,26 +1,193 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-deep: #0b0b0c;
+  --bg-card: #141416;
+  --border-card: #26262a;
+  --electric-yellow: #ffe600;
+  --electric-glow: #ffc700;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-electric-yellow: #ffe600;
+  --color-electric-glow: #ffc700;
+  --color-bg-deep: #0b0b0c;
+  --color-bg-card: #141416;
+  --color-border-card: #26262a;
+  --color-text-secondary: #a1a1aa;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #ffe600;
+  selection-color: #0b0b0c;
+}
+
+::selection {
+  background-color: #ffe600;
+  color: #0b0b0c;
+}
+
+/* Headings font */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Technical Blueprint Grid */
+.bg-blueprint {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+.bg-blueprint-dense {
+  background-size: 18px 18px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 230, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 230, 0, 0.03) 1px, transparent 1px);
+}
+
+/* Electric Glow utilities */
+.glow-yellow-sm {
+  box-shadow: 0 0 12px rgba(255, 230, 0, 0.35);
+}
+
+.glow-yellow-md {
+  box-shadow: 0 0 24px rgba(255, 230, 0, 0.45);
+}
+
+.glow-yellow-lg {
+  box-shadow: 0 0 40px rgba(255, 230, 0, 0.6);
+}
+
+.drop-shadow-electric {
+  filter: drop-shadow(0 0 12px rgba(255, 230, 0, 0.75));
+}
+
+.drop-shadow-electric-subtle {
+  filter: drop-shadow(0 0 6px rgba(255, 230, 0, 0.4));
+}
+
+/* Keyframes */
+@keyframes neonFlicker {
+  0% {
+    opacity: 0.15;
+    filter: drop-shadow(0 0 2px rgba(255, 230, 0, 0.1));
+  }
+  3% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 15px rgba(255, 230, 0, 0.9));
+  }
+  6% {
+    opacity: 0.2;
+    filter: none;
+  }
+  9% {
+    opacity: 1;
+    filter: drop-shadow(0 0 25px rgba(255, 230, 0, 0.95));
+  }
+  14% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 4px rgba(255, 230, 0, 0.3));
+  }
+  18% {
+    opacity: 1;
+    filter: drop-shadow(0 0 20px rgba(255, 230, 0, 0.85));
+  }
+  30% {
+    opacity: 0.85;
+  }
+  40% {
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(255, 230, 0, 0.8));
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 14px rgba(255, 230, 0, 0.75));
+  }
+}
+
+@keyframes sparkStagger1 {
+  0%, 100% { opacity: 0.25; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 8px #ffe600); }
+}
+
+@keyframes sparkStagger2 {
+  0%, 100% { opacity: 0.8; transform: scale(1.05); filter: drop-shadow(0 0 6px #ffe600); }
+  50% { opacity: 0.2; transform: scale(0.9); }
+}
+
+@keyframes sparkStagger3 {
+  0%, 100% { opacity: 0.3; transform: scale(0.95); }
+  35% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 9px #ffe600); }
+}
+
+@keyframes electricBeamScan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes electricPulseLine {
+  0% { transform: scaleX(0); opacity: 0.3; }
+  60% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0.9; }
+}
+
+@keyframes shimmerSweep {
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  100% { transform: translateX(250%) skewX(-25deg); }
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(255, 230, 0, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 230, 0, 0); }
+}
+
+@keyframes neonBorderPulse {
+  0%, 100% { border-color: rgba(255, 230, 0, 0.3); }
+  50% { border-color: rgba(255, 230, 0, 0.85); box-shadow: 0 0 15px rgba(255, 230, 0, 0.2); }
+}
+
+.animate-neon-flicker {
+  animation: neonFlicker 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-spark-1 {
+  animation: sparkStagger1 2.2s infinite ease-in-out;
+}
+
+.animate-spark-2 {
+  animation: sparkStagger2 2.7s infinite ease-in-out;
+}
+
+.animate-spark-3 {
+  animation: sparkStagger3 1.9s infinite ease-in-out;
+}
+
+.animate-beam-scan {
+  animation: electricBeamScan 3.5s infinite linear;
+}
+
+.animate-electric-line {
+  animation: electricPulseLine 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-ring-pulse {
+  animation: ringPulse 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-neon-border {
+  animation: neonBorderPulse 3s infinite ease-in-out;
 }
