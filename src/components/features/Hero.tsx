@@ -7,14 +7,19 @@ import { Button } from '@/components/ui/Button';
 import { getWhatsAppUrl } from '@/lib/constants';
 
 export const Hero: React.FC = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay handled by browser policies with muted attribute
-      });
-    }
+    const playVideo = (video: HTMLVideoElement | null) => {
+      if (video) {
+        video.play().catch(() => {
+          // Autoplay handled by browser policies with muted attribute
+        });
+      }
+    };
+    playVideo(desktopVideoRef.current);
+    playVideo(mobileVideoRef.current);
   }, []);
 
   return (
@@ -22,17 +27,33 @@ export const Hero: React.FC = () => {
       id="hero"
       className="relative min-h-[90vh] pt-32 pb-16 lg:pt-40 lg:pb-24 flex items-center overflow-hidden bg-[#0B0B0C]"
     >
-      {/* Background Video: Web-optimized 1080p, zero overlay opacity, faststart streaming */}
+      {/* Background Video: Web-optimized, zero overlay opacity, faststart streaming */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Mobile Video (Vertical 9:16 crop focused directly on lightning discharge) */}
         <video
-          ref={videoRef}
+          ref={mobileVideoRef}
+          poster="/videos/hero-poster-mobile.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="md:hidden w-full h-full object-cover object-center"
+        >
+          <source src="/videos/hero-electric-mobile.mp4" type="video/mp4" />
+          <source src="/videos/hero-electric-mobile.webm" type="video/webm" />
+        </video>
+
+        {/* Desktop Video (Widescreen 16:9 aligned right) */}
+        <video
+          ref={desktopVideoRef}
           poster="/videos/hero-poster.jpg"
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          className="w-full h-full object-cover object-center lg:object-right"
+          className="hidden md:block w-full h-full object-cover object-right"
         >
           <source src="/videos/hero-electric.mp4" type="video/mp4" />
           <source src="/videos/hero-electric.webm" type="video/webm" />
