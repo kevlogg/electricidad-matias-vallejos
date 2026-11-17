@@ -161,13 +161,28 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#A1A1AA] gap-3">
+        {/* Bottom Bar: Copyright & KevDev attribution */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#A1A1AA] gap-3 pb-6 sm:pb-0 sm:pr-24">
           <p>© 2026 MV Electricidad - Matías Vallejos. Todos los derechos reservados.</p>
-          <p className="flex items-center gap-1">
-            <span>Desarrollado para alta conversión y máxima seguridad eléctrica</span>
-            <Zap className="w-3.5 h-3.5 text-[#FFE600]" />
-          </p>
+          <a
+            href="https://kevdev.net.ar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-1.5 text-xs text-[#A1A1AA] hover:text-white transition-colors duration-200"
+            title="KevDev - Desarrollo Web de Alto Rendimiento"
+          >
+            <span>Desarrollado por</span>
+            <span className="font-semibold text-white group-hover:text-[#FFE600] transition-colors">kevdev</span>
+            <div className="relative w-4.5 h-4.5 ml-0.5 transition-transform duration-200 group-hover:scale-110 flex items-center justify-center">
+              <Image
+                src="/images/kevdev-logo.png"
+                alt="Logo KevDev"
+                width={18}
+                height={18}
+                className="object-contain brightness-125 group-hover:brightness-150"
+              />
+            </div>
+          </a>
         </div>
       </div>
     </footer>
