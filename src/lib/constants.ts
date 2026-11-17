@@ -7,7 +7,6 @@ export const BUSINESS_CONFIG = {
   role: 'Técnico Electricista Matriculado / Profesional',
   phoneDisplay: '+54 9 223 682-1209',
   phoneClean: '5492236821209',
-  email: 'contacto@mvelectricidad.com.ar',
   ratingValue: 5.0,
   reviewCount: 49,
   defaultWhatsAppMessage: 'Hola Matías, te contacto desde la web de MV Electricidad. Necesito consultar por un trabajo eléctrico.',

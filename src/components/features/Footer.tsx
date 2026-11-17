@@ -7,7 +7,6 @@ import Image from 'next/image';
 import {
   Zap,
   Phone,
-  Mail,
   MapPin,
   Clock,
   ExternalLink,
@@ -101,15 +100,6 @@ export const Footer: React.FC = () => {
                   className="hover:text-white transition-colors font-mono"
                 >
                   {BUSINESS_CONFIG.phoneDisplay}
-                </a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#FFE600] shrink-0" />
-                <a
-                  href={`mailto:${BUSINESS_CONFIG.email}`}
-                  className="hover:text-white transition-colors"
-                >
-                  {BUSINESS_CONFIG.email}
                 </a>
               </li>
             </ul>

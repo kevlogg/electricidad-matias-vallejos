@@ -243,7 +243,7 @@ export const AdminQuotesSection: React.FC<AdminQuotesSectionProps> = ({
       doc.setTextColor(161, 161, 170); // #A1A1AA
       doc.setFontSize(8);
       doc.text('Mar del Plata • Batán • Miramar • Santa Clara del Mar • Mar de Cobo', 14, 30);
-      doc.text('Tel / Urgencias WhatsApp: +54 9 223 682-1209  |  contacto@mvelectricidad.com.ar', 14, 35);
+      doc.text('Tel / Urgencias WhatsApp: +54 9 223 682-1209  |  Atención Personalizada Directa', 14, 35);
 
       // Quote badge on top right
       doc.setTextColor(255, 230, 0);

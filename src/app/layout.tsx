@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: true,
     address: true,
-    email: true,
+    email: false,
   },
   icons: {
     icon: [
@@ -148,7 +148,6 @@ export default function RootLayout({
     logo: "https://electricidad-matias-vallejos.vercel.app/images/logo.jpg",
     image: "https://electricidad-matias-vallejos.vercel.app/images/logo.jpg",
     telephone: BUSINESS_CONFIG.phoneDisplay,
-    email: BUSINESS_CONFIG.email,
     priceRange: "$$",
     currenciesAccepted: "ARS",
     paymentAccepted: "Efectivo, Transferencia Bancaria, Mercado Pago",
