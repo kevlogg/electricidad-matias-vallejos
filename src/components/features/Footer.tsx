@@ -168,20 +168,22 @@ export const Footer: React.FC = () => {
             href="https://kevdev.net.ar"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-1.5 text-xs text-[#A1A1AA] hover:text-white transition-colors duration-200"
-            title="KevDev - Desarrollo Web de Alto Rendimiento"
+            className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-[#FFE600]/10 border border-white/10 hover:border-[#FFE600]/40 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(255,230,0,0.15)]"
+            title="Visitar KevDev - kevdev.net.ar"
           >
-            <span>Desarrollado por</span>
-            <span className="font-semibold text-white group-hover:text-[#FFE600] transition-colors">kevdev</span>
-            <div className="relative w-4.5 h-4.5 ml-0.5 transition-transform duration-200 group-hover:scale-110 flex items-center justify-center">
+            <span className="text-xs text-[#A1A1AA] group-hover:text-white transition-colors">
+              Desarrollado por <strong className="font-semibold text-white group-hover:text-[#FFE600] transition-colors">kevdev</strong>
+            </span>
+            <div className="relative w-4 h-4 transition-transform duration-200 group-hover:scale-110 flex items-center justify-center">
               <Image
                 src="/images/kevdev-logo.png"
                 alt="Logo KevDev"
-                width={18}
-                height={18}
+                width={16}
+                height={16}
                 className="object-contain brightness-125 group-hover:brightness-150"
               />
             </div>
+            <ExternalLink className="w-3 h-3 text-[#71717A] group-hover:text-[#FFE600] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
           </a>
         </div>
       </div>
