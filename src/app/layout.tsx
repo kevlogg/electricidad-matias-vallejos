@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { BUSINESS_CONFIG, FAQ_DATA, TESTIMONIALS_DATA } from "@/lib/constants";
+import { PwaRegister } from "@/components/pwa/PwaRegister";
 
 const montserrat = Montserrat({
   variable: "--font-heading",
@@ -289,6 +290,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#0B0B0C] text-white antialiased flex flex-col selection:bg-[#FFE600] selection:text-[#0B0B0C]">
+        <PwaRegister />
         {children}
       </body>
     </html>

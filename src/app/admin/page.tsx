@@ -11,10 +11,12 @@ import {
   LogOut,
   ExternalLink,
   ShieldCheck,
+  Download,
 } from 'lucide-react';
 import { AdminClientsSection } from '@/components/admin/AdminClientsSection';
 import { AdminQuotesSection } from '@/components/admin/AdminQuotesSection';
 import { AdminPlanKevDevSection } from '@/components/admin/AdminPlanKevDevSection';
+import { AdminPwaInstallModal } from '@/components/admin/AdminPwaInstallModal';
 import { ClientItem } from '@/app/api/admin/clients/route';
 
 type AdminTab = 'clientes' | 'presupuestos' | 'plan';
@@ -26,6 +28,39 @@ function AdminContent() {
 
   const [activeTab, setActiveTab] = useState<AdminTab>(subSuccessParam ? 'plan' : 'clientes');
   const [selectedClientForQuote, setSelectedClientForQuote] = useState<ClientItem | null>(null);
+
+  // PWA Install State
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showPwaModal, setShowPwaModal] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Detect standalone mode (already installed as PWA)
+      const isStandaloneMode =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone === true;
+      setIsStandalone(Boolean(isStandaloneMode));
+
+      // Detect iOS
+      const userAgent = window.navigator.userAgent || '';
+      const isAppleMobile = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+      setIsIOS(Boolean(isAppleMobile));
+
+      // Listen for Chromium PWA install prompt
+      const handleBeforeInstall = (e: Event) => {
+        e.preventDefault();
+        setDeferredPrompt(e);
+      };
+
+      window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      };
+    }
+  }, []);
 
   const handleSelectClient = (client: ClientItem) => {
     setSelectedClientForQuote(client);
@@ -74,8 +109,16 @@ function AdminContent() {
               </div>
             </Link>
 
-            {/* Quick Public Site Link on Mobile */}
+            {/* Quick Actions & PWA Download on Mobile */}
             <div className="flex items-center gap-2 md:hidden">
+              <button
+                onClick={() => setShowPwaModal(true)}
+                className="p-2 rounded-lg bg-[#FFE600] text-[#0B0B0C] font-bold shadow-[0_0_12px_rgba(255,230,0,0.35)] flex items-center justify-center active:scale-95 transition-transform"
+                title="Descargar como App (PWA)"
+                aria-label="Descargar panel como aplicación"
+              >
+                <Download className="w-4 h-4 stroke-[2.5]" />
+              </button>
               <Link
                 href="/"
                 target="_blank"
@@ -134,7 +177,17 @@ function AdminContent() {
           </nav>
 
           {/* Desktop Right Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
+            {/* PWA Download Button */}
+            <button
+              onClick={() => setShowPwaModal(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFE600]/10 hover:bg-[#FFE600]/20 text-[#FFE600] border border-[#FFE600]/30 hover:border-[#FFE600] text-xs font-bold transition-all shadow-[0_0_15px_rgba(255,230,0,0.12)] cursor-pointer active:scale-95"
+              title="Instalar panel como app en tu celular o PC"
+            >
+              <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>{isStandalone ? 'App Instalada' : 'Descargar App'}</span>
+            </button>
+
             <Link
               href="/"
               target="_blank"
@@ -183,6 +236,14 @@ function AdminContent() {
           </span>
         </div>
       </footer>
+      {/* PWA Install Modal */}
+      <AdminPwaInstallModal
+        isOpen={showPwaModal}
+        onClose={() => setShowPwaModal(false)}
+        deferredPrompt={deferredPrompt}
+        isStandalone={isStandalone}
+        isIOS={isIOS}
+      />
     </div>
   );
 }

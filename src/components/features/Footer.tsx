@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Shield,
   ArrowRight,
+  Lock,
 } from 'lucide-react';
 import { BUSINESS_CONFIG, SERVICES_LIST, getWhatsAppUrl } from '@/lib/constants';
 import { Button } from '@/components/ui/Button';
@@ -153,7 +154,17 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright & KevDev attribution */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#A1A1AA] gap-3 pb-6 sm:pb-0 sm:pr-24">
-          <p>© 2026 MV Electricidad - Matías Vallejos. Todos los derechos reservados.</p>
+          <div className="flex items-center gap-1.5">
+            <p>© 2026 MV Electricidad - Matías Vallejos. Todos los derechos reservados.</p>
+            <Link
+              href="/admin"
+              className="text-[#1A1A1E] hover:text-[#FFE600] transition-colors p-1 rounded focus:outline-none"
+              aria-label="Acceso privado administración"
+              title="Panel de Administración"
+            >
+              <Lock className="w-3.5 h-3.5" />
+            </Link>
+          </div>
           <a
             href="https://kevdev.net.ar"
             target="_blank"
