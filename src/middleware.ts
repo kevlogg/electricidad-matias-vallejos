@@ -12,8 +12,17 @@ function getSecret() {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow access to login page and public assets
+  // If already authenticated and visiting login, redirect to admin
   if (pathname.startsWith('/admin/login')) {
+    const token = request.cookies.get(COOKIE_NAME)?.value;
+    if (token) {
+      try {
+        await jwtVerify(token, getSecret());
+        return NextResponse.redirect(new URL('/admin', request.url));
+      } catch {
+        // invalid token, proceed to login
+      }
+    }
     return NextResponse.next();
   }
 

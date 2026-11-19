@@ -38,8 +38,7 @@ export default function AdminLoginPage() {
         return;
       }
 
-      router.push('/admin');
-      router.refresh();
+      window.location.href = '/admin';
     } catch {
       setError('Error de conexión. Intentá nuevamente.');
       setLoading(false);
